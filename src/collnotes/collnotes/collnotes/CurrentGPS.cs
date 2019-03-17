@@ -21,7 +21,7 @@ namespace collnotes
             try
             {
                 var locator = CrossGeolocator.Current;
-                locator.DesiredAccuracy = 100; // 100 is highest accuracy, see Plugin doc about this value
+                locator.DesiredAccuracy = 50; // Settings uncertainty threshold to at most ± 50 meters
 
                 var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
                 if (status != PermissionStatus.Granted) {
@@ -36,8 +36,8 @@ namespace collnotes
                 }
 
                 if (status == PermissionStatus.Granted) {
-                    // get position
-                    position = await locator.GetPositionAsync(TimeSpan.FromSeconds(5), null, true);
+                    // get position, with a 10 second timeout
+                    position = await locator.GetPositionAsync(TimeSpan.FromSeconds(10), null, true);
 
                     string fullLocation = string.Format("Time:{0},Lat:{1},Long:{2},Altitude:{3},Altitude_Accuracy:{4},Accuracy:{5},Heading:{6},Speed:{7}",
                         position.Timestamp, position.Latitude, position.Longitude,
